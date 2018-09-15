@@ -4,7 +4,6 @@ dependencies:
   express: 4.16.3
   mongodb: 2.2.36
   mongoose: 4.13.17
-  shortid: 2.2.13
 packages:
   /accepts/1.3.5:
     dependencies:
@@ -410,10 +409,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-FiaFwKl864onHFFUV/a2szAl7X0fxVlSKNdhTf+BM8i8goEgYut8u5P9MqQqIYwvaMxjzVESsoEm/2kfkFH1rg==
-  /nanoid/1.2.3:
-    dev: false
-    resolution:
-      integrity: sha512-BAnxAdaihzMoszwhqRy8FPOX+dijs7esUEUYTIQ1KsOSKmCVNYnitAMmBDFxYzA6VQYvuUKw7o2K1AcMBTGzIg==
   /negotiator/0.6.1:
     dev: false
     engines:
@@ -582,12 +577,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-BvE/TwpZX4FXExxOxZyRGQQv651MSwmWKZGqvmPcRIjDqWub67kTKuIMx43cZZrS/cBBzwBcNDWoFxt2XEFIpQ==
-  /shortid/2.2.13:
-    dependencies:
-      nanoid: 1.2.3
-    dev: false
-    resolution:
-      integrity: sha512-dBuNnQGKrJNfjunmXI2X7bl1gnMO4PwbNxrTzO1JvilODmL7WyyCtA+DYxe9XunLXmxmgzFIvKPQ6XRAQrr46Q==
   /sliced/0.0.5:
     dev: false
     resolution:
@@ -649,9 +638,8 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
-  body-parser: ^1.15.2
+  body-parser: ^1.18.3
   cors: ^2.8.1
   express: ^4.14.0
   mongodb: ^2.2.14
   mongoose: ^4.7.2
-  shortid: ^2.2.6

@@ -1,28 +1,22 @@
-const express = require('express')
-const app = express()
-const bodyParser = require('body-parser')
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
 
-const cors = require('cors')
+const cors = require('cors');
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI);
 
-app.use(cors())
+app.use(cors());
 
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.use(express.static('public'))
+app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
-
-
-// Not found middleware
-app.use((req, res, next) => {
-  return next({status: 404, message: 'not found'})
-})
 
 // Error Handling middleware
 app.use((err, req, res, next) => {
@@ -41,8 +35,31 @@ app.use((err, req, res, next) => {
   }
   res.status(errCode).type('txt')
     .send(errMessage)
-})
+});
 
-const listener = app.listen(process.env.PORT || 3000, () => {
+const listener = app.listen(3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
-})
+});
+
+let userSchema = new mongoose.Schema({
+  username: String
+});
+
+let User = mongoose.model('User', userSchema);
+
+app.post('/api/exercise/new-user', (req, res) => {
+  let username = req.body.username;
+  User.findOne({username: username}, (err, storedUsername) => {
+    if (err) return;
+    if (storedUsername) {
+      res.send('The username \'' + username + '\' has already been taken.'); 
+    } else {
+      let newUser = new User({ username: username });
+      
+      newUser.save((err, createdUser) => {
+        if (err) return;
+        res.json({ username: username, _id: createdUser._id });
+      });
+    }
+  });
+});

@@ -47,6 +47,7 @@ let userSchema = new mongoose.Schema({
 
 let User = mongoose.model('User', userSchema);
 
+// Add new user
 app.post('/api/exercise/new-user', (req, res) => {
   let username = req.body.username;
   User.findOne({username: username}, (err, storedUsername) => {
@@ -60,6 +61,62 @@ app.post('/api/exercise/new-user', (req, res) => {
         if (err) return;
         res.json({ username: username, _id: createdUser._id });
       });
+    }
+  });
+});
+
+// Get all users
+app.get('/api/exercise/users', (req, res) => {
+  User.find({}, 'username _id', (err, users) => {
+    let output = [];
+    
+    users.map((user) => {
+      output.push(user);
+    });
+    
+    res.send(output);
+  });
+});
+
+let exerciseSchema = new mongoose.Schema({
+  userId: {type: String, required: true},
+  description: {type: String, required: true},
+  duration: {type: Number, required: true},
+  date: {type: Date, default: Date.now}
+});
+
+let Exercise = mongoose.model('Exercise', exerciseSchema);
+
+// Adds a new exercise for a user
+app.post('/api/exercise/add', (req, res) => {
+  let userId = req.body.userId;
+  let description = req.body.description;
+  let duration = req.body.duration;
+  let date = req.body.date;
+  
+  User.findById(userId, (err, user) => {
+    if (err) return;
+    if (user) {
+      let newExercise = new Exercise({
+        userId: user._id,
+        description: description,
+        duration: duration
+      });
+
+      if (date.length > 0) {
+        newExercise.date = new Date(date);
+      }
+
+      newExercise.save((err, createdExercise) => {
+        if (err) return;
+        res.json({
+          userId: userId,
+          description: description,
+          duration: duration,
+          date: createdExercise.date,
+          _id: createdExercise._id
+        });
+      }); 
     }
   });
 });

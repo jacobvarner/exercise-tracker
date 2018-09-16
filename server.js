@@ -124,10 +124,32 @@ app.post('/api/exercise/add', (req, res) => {
 // Get list of all exercises for a given user
 app.get('/api/exercise/log/:userId', (req, res) => {
   let userId = req.params.userId;
+  let from = req.query.from;
+  let to = req.query.to;
+  let limit = req.query.limit;
   
   User.findById(userId, 'username _id', (err, user) => {
     if (err) return;
-    Exercise.find({ userId: userId }, 'description duration date _id', (err, exercises) => {
+    
+    if (from === undefined) {
+      from = new Date(0);
+    }
+    
+    if (to === undefined) {
+      to = new Date();
+    }
+    
+    if (limit === undefined) {
+      limit = 0;
+    } else {
+      limit = parseInt(limit); 
+    }
+      
+    let query = Exercise.find({ userId: userId, date: { $gte: from, $lte: to } }, 'description duration date _id', (err) => {
+      if (err) return;
+    }).sort({ date: -1 }).limit(limit);
+    
+    query.exec((err, exercises) => {
       if (err) return;
       res.json({ user: user, exercises: exercises });
     });

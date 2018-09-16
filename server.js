@@ -120,3 +120,17 @@ app.post('/api/exercise/add', (req, res) => {
     }
   });
 });
+
+// Get list of all exercises for a given user
+app.get('/api/exercise/log/:userId', (req, res) => {
+  let userId = req.params.userId;
+  
+  User.findById(userId, 'username _id', (err, user) => {
+    if (err) return;
+    Exercise.find({ userId: userId }, 'description duration date _id', (err, exercises) => {
+      if (err) return;
+      res.json({ user: user, exercises: exercises });
+    });
+  });
+  
+});
